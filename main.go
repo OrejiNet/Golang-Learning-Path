@@ -1,10 +1,12 @@
 package main
 
 import (
-	"curso-go/cmd"
-	"fmt"
 	"curso-go/advanced"
+	"curso-go/cmd"
 	"curso-go/gentleman"
+	"fmt"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -12,7 +14,8 @@ func main() {
 	//advanced_functions()
 	//level3()
 	//memoria()
-	interfaces()
+	//interfaces()
+	channels()
 }
 
 func main_concepts() {
@@ -71,4 +74,52 @@ func memoria(){
 
 func interfaces(){
 	gentleman.CallInfo()
+}
+
+
+func channels() {
+	canal := make(chan string)
+	go gentleman.CallHello(canal)
+	gentleman.PrintMessage(canal)
+
+	canal2 := make (chan int)
+	go func(){
+		for i := range 5 {
+			canal2 <- i
+		}
+		close(canal2)
+	}()
+
+	for num := range canal2 {
+		fmt.Println("Numero recibido:", num)
+	}
+
+	// Mutex Bloquear y desbloquear el acceso a un recurso compartido para evitar condiciones de carrera.
+	var contador int
+	var mutex sync.RWMutex
+
+	// Writer - Incrementa el contador
+	go func(){
+		for i := 0; i < 5; i++ {
+			mutex.Lock()
+			contador++
+			mutex.Unlock()
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+	
+	// Reader - Lee el valor del contador
+	for i := 0; i < 5; i++ {
+		go func(id int ){
+			for j := 0; j < 5; j++ {
+				mutex.RLock()
+				fmt.Printf("Leyendo desde Goroutine %d - Contador: %d\n", id, contador)
+				mutex.RUnlock()
+				time.Sleep(150 * time.Millisecond)
+			}
+		}(i)
+	}
+
+	time.Sleep(2 * time.Second)
+
 }
