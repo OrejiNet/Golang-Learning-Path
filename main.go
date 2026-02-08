@@ -4,12 +4,15 @@ import (
 	"curso-go/cmd"
 	"fmt"
 	"curso-go/advanced"
+	"curso-go/gentleman"
 )
 
 func main() {
 	//main_concepts()
-	advanced_functions()
-
+	//advanced_functions()
+	//level3()
+	//memoria()
+	interfaces()
 }
 
 func main_concepts() {
@@ -42,4 +45,30 @@ func advanced_functions(){
 	fmt.Println(seq())
 	fmt.Println(seq())
 	fmt.Println("Factorial of 5 is:", advanced.Factorial(5))
+}
+
+
+func level3() {
+	result, err := gentleman.Dividir(10, 0)
+	
+	if err != nil { fmt.Println("Error:", err)
+	} else { fmt.Println("Resultado:", result)}
+	
+	gentleman.PrintNombres("Cristopher", "Angulo", "Gonzalez")
+	gentleman.CallContador(5)
+
+	rectangulo := gentleman.Rectangulo{Ancho: 5, Alto: 3}
+	gentleman.InfoRectangulo(rectangulo)
+
+	rectangulo2 := gentleman.Rectangulo{Ancho: 10, Alto: 4}
+	rectangulo2.Area()
+	rectangulo2.Perimetro()
+}
+
+func memoria(){
+	gentleman.TestPunteros()
+}
+
+func interfaces(){
+	gentleman.CallInfo()
 }
